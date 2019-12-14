@@ -1,17 +1,34 @@
 <template>
   <div id="home">
-    <nav-bar class="nav-bar"><div slot="center">购物街</div></nav-bar>
+    <nav-bar class="nav-bar">
+      <div slot="center">购物街</div>
+    </nav-bar>
+    <my-swipe :banners="banners"/>
   </div>
 </template>
 
 <script>
-  // import NavBar from 'components/common/navbar/BavBar'
+
   import NavBar from 'components/common/navbar/NavBar'
+  import MySwipe from 'components/common/swipe/MySwipe'
+
+  import {getHomeMultiData} from "../../network/home";
 
   export default {
     name: "Home",
+    data(){
+      return {
+        banners:[]
+      }
+    },
     components:{
-      NavBar
+      NavBar,
+      MySwipe
+    },
+    mounted() {
+      getHomeMultiData().then(res=>{
+        this.banners = res.data.data.banner.list
+      })
     }
   }
 </script>
