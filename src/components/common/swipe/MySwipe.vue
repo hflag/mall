@@ -21,6 +21,7 @@
 
 <style scoped>
   .mint-swipe {
+    margin-top: 44px;
     height: 150px;
   }
 
