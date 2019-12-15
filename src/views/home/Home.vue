@@ -6,6 +6,7 @@
     <my-swipe :banners="banners"/>
     <recommend-view :recommends="recommends"/>
     <feature-view/>
+    <tab-command class="tab-control" :titles="['流行', '新款', '精选']"/>
     <ul>
       <li>列表1</li>
       <li>列表2</li>
@@ -67,6 +68,7 @@
     import MySwipe from 'components/common/swipe/MySwipe'
     import RecommendView from "./childComps/RecommendView";
     import FeatureView from "./childComps/FeatureView";
+    import TabCommand from "components/content/TabCommand";
 
     import {getHomeMultiData} from "../../network/home";
 
@@ -76,13 +78,15 @@
             return {
                 banners: [],
                 recommends: [],
+                titles:[]
             }
         },
         components: {
             FeatureView,
             RecommendView,
             NavBar,
-            MySwipe
+            MySwipe,
+            TabCommand
         },
         mounted() {
             getHomeMultiData().then(res => {
@@ -98,5 +102,9 @@
     background-color: var(--color-tint);
     font-weight: 700;
     color: #fff;
+  }
+  .tab-control{
+    position: sticky;
+    top:44px;
   }
 </style>
