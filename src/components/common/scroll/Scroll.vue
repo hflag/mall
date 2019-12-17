@@ -27,36 +27,46 @@
             }
         },
         mounted() {
-            // 1.创建BScroll对象
-            this.scroll=new BScroll(this.$refs.wrapper,{
-                click:true, //设置触发内部点击事件
-                probeType: this.probeType, //设置触发滚动事件
-                pullUpLoad: this.pullUpLoad, //设置触发上拉加载
+
+            this.$nextTick(() => {
+                this._initScroll()
             })
 
-            // 2. 监听滚动位置
-            this.scroll.on('scroll', pos=>{
-                this.$emit('scroll', pos)
-            })
-
-            // 3. 监听上拉事件
-            this.scroll.on('pullingUp', ()=>{
-                this.$emit('pullingUp')
-                // console.log('上拉加载更多');
-            })
-
-            // console.log(this.scroll);
         },
         methods:{
+            _initScroll() {
+                if (!this.$refs.wrapper) {
+                    return
+                }
+                // 1.创建BScroll对象
+                this.scroll = new BScroll(this.$refs.wrapper, {
+                    probeType: this.probeType,  //设置触发滚动事件
+                    click: true,  //设置触发内部点击事件
+                    pullUpLoad: this.pullUpLoad //设置触发上拉加载
+                })
+                // 2. 监听滚动位置
+                if (this.probeType == 2 || this.probeType == 3) {
+                    this.scroll.on('scroll', pos => {
+                        this.$emit('scroll', pos)
+                    })
+                }
+                // 3. 监听上拉加载
+                if (this.pullUpLoad) {
+                    this.scroll.on('pullingUp', () => {
+                        this.$emit('pullingUP')
+                    })
+                }
+            },
             scrollXY(x, y, time=300){
                 this.scroll.scrollTo(x,y,time)
             },
             refreshed(){
                 this.scroll.refresh()
+
+            },
+            finishedPullUp(){
+                this.scroll.finishPullUp()
             }
-            // finishedPullUp(){
-            //     this.scroll.finishPullUp()
-            // }
         }
     }
 </script>

@@ -7,7 +7,7 @@
             ref="scroll"
             :probe-type="3"
             @scroll="contentScroll"
-            :pull-up-load="true"
+            :pull-up-load="true" @pullingUP="loadMore"
             >
       <my-swipe :banners="banners"/>
       <recommend-view :recommends="recommends"/>
@@ -32,7 +32,7 @@
     import BackTop from "components/content/backTop/BackTop";
 
     import {getHomeMultiData, getHomeGoods} from "network/home";
-
+    import {debounce} from "../../common/utils";
 
 
     export default {
@@ -71,13 +71,20 @@
             this.homeGoods('sell')
 
             // 3. 监听item中图片加载完成
-            this.$bus.$on('itemImageLoad', ()=>{
-                console.log('hello');
-                this.$refs.scroll.refreshed()
-            })
-        },
-        mounted(){
 
+            // this.$bus.$on('itemImageLoad', ()=>{
+            //     console.log('hello');
+            //     this.$refs.scroll.refreshed()
+            // })
+
+        },
+        mounted() {
+            // 3. 监听item中图片加载完成
+            const refresh = debounce(this.$refs.scroll.refreshed, 500)
+
+            this.$bus.$on('itemImageLoad', () => {
+                refresh()
+            })
         },
         methods:{
             /*
@@ -97,7 +104,7 @@
 
                     this.goods[type].page += 1
 
-                    // this.$refs.scroll.finishedPullUp()
+                    this.$refs.scroll.finishedPullUp()
                 })
             },
             /*
@@ -128,16 +135,24 @@
             },
             loadMore(){
                 this.homeGoods(this.currentType)
+                // console.log('loadMore');
             },
             imageLoadCompleted(){
                 console.log('imageLoaded');
-            }
-
+            },
+            // 防抖函数
+            // debounce(func, delay){
+            //   let timer = null
+            //   return function (...args) {
+            //       if(timer) clearTimeout(timer)
+            //       timer = setTimeout(()=>{
+            //         func.apply(this, args)
+            //       },delay)
+            //   }
+            // }
 
         },
-        mounted() {
 
-        }
     }
 </script>
 
